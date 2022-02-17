@@ -1,3 +1,14 @@
+@import url("https://fonts.googleapis.com/css?family=Titillium+Web:400,700&display=swap");
+
+body {
+  font-family: "Titillium Web", sans-serif;
+  background: linear-gradient(
+    270deg,
+    rgba(229, 36, 37, 0.8968721277573529) 0%,
+    rgba(33, 54, 136, 0.9472922958245799) 89%
+  );
+}
+
 .App {
   text-align: center;
 }
