@@ -52,7 +52,12 @@ const Card = ({pokemon}) => {
   const [idNumber, updateIdNumber] = useState("");
   const [sprite, updateSprite] = useState("");
 
-  useEffect(() => {
+  console.log("height: " + height);
+  console.log("weight:" + weight);
+
+  const fetchPokemonData = (pokemon) => {
+    console.log(`fetching data for ${pokemon}`);
+
     const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
     axios.get(url).then((res) => {
@@ -74,11 +79,47 @@ const Card = ({pokemon}) => {
       updateWeight(res.data.weight);
       updateIdNumber(res.data.id);
       updateSprite(res.data.sprites["front_default"]);
+      localStorage.setItem(`${pokemon}`, JSON.stringify(res.data));
     });
+  };
 
+  const checkLocalStorageForPokemon = (pokemon) => {
+    console.log("checking local storage");
+    const data = localStorage.getItem(`${pokemon}`);
+    return data;
+  };
+
+  useEffect(() => {
+    //first check localstorage for the pokemon data
+    const data = checkLocalStorageForPokemon(pokemon);
+
+    if (data === null) {
+      fetchPokemonData(pokemon);
+    }
+    if (data !== null) {
+      const parsedData = JSON.parse(data);
+      console.log("parsedData.height: " + JSON.stringify(parsedData.height));
+      // console.log("parsed data: " + JSON.stringify(parsedData));
+
+      updatePokemonData(parsedData);
+      updateAbilities(
+        parsedData.abilities.map((ability) => {
+          return ability.name;
+        })
+      );
+      updateTypes(
+        parsedData.types.map((type) => {
+          return type.type.name;
+        })
+      );
+      updateHeight(parsedData.height);
+      updateWeight(parsedData.weight);
+      updateIdNumber(parsedData.id);
+      updateSprite(parsedData.sprites["front_default"]);
+    }
     //to cancel old request when we make a new request
     //so app doesn't load old data if an old request finishes before a new request
-  }, []);
+  }, [pokemon]);
 
   if (loading) {
     return <Container />;
