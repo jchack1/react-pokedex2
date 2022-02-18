@@ -24,15 +24,7 @@ const Sprite = styled.img`
   width: 150px;
 `;
 
-//could do a fetch for each card, using the pokemon name
-//save that data to variables
-//then may be able to sort/filter
-//eg. type - show only the pokemon where type =  grass etc
-//needs to be associated with the card so cards can be manipulated
-//should figure out how to cache the data so i'm not making a call whenever we change the page
-//or, forget pagination, could just get the first 50 pokemon and their data, and work with that
-//don't lose data since we're not switching pages
-
+//return abilities markup based on how many abilities the pokemon has
 const Abilities = ({abilities}) => {
   console.log("abilities.length:  " + abilities.length);
   return abilities.length > 1 ? (
@@ -58,6 +50,7 @@ const Abilities = ({abilities}) => {
   );
 };
 
+//return types markup based on how many types this pokemon has
 const Types = ({types}) => {
   console.log("types.length:  " + types.length);
   return types.length > 1 ? (
@@ -100,9 +93,9 @@ const Card = ({pokemon}) => {
 
     const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
+    //get data
     axios.get(url).then((res) => {
-      //we have our data, so no longer loading
-      console.log(res);
+      //update state
       updateLoading(false);
       updatePokemonData(res.data);
       updateAbilities(
@@ -119,12 +112,13 @@ const Card = ({pokemon}) => {
       updateWeight(res.data.weight);
       updateIdNumber(res.data.id);
       updateSprite(res.data.sprites["front_default"]);
+
+      //add to local storage
       localStorage.setItem(`${pokemon}`, JSON.stringify(res.data));
     });
   };
 
   const checkLocalStorageForPokemon = (pokemon) => {
-    console.log("checking local storage");
     const data = localStorage.getItem(`${pokemon}`);
     return data;
   };
@@ -137,10 +131,10 @@ const Card = ({pokemon}) => {
       fetchPokemonData(pokemon);
     }
     if (data !== null) {
+      //parse data
       const parsedData = JSON.parse(data);
-      console.log("parsedData.height: " + JSON.stringify(parsedData.height));
-      // console.log("parsed data: " + JSON.stringify(parsedData));
 
+      //update state
       updatePokemonData(parsedData);
       updateAbilities(
         parsedData.abilities.map((x) => {
@@ -158,18 +152,14 @@ const Card = ({pokemon}) => {
       updateSprite(parsedData.sprites["front_default"]);
       updateLoading(false);
     }
-    //to cancel old request when we make a new request
-    //so app doesn't load old data if an old request finishes before a new request
   }, [pokemon]);
 
   if (loading) {
     return <Container />;
   }
-  console.log(abilities);
 
+  //return card that is "flipped" or unflipped, updated by onClick fxn
   return isFlipped ? (
-    // <img src={logo} alt="loading" className="loading-logo" />
-
     <Container onClick={() => updateIsFlipped(!isFlipped)}>
       <p>
         <strong>Height: </strong>
