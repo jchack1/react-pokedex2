@@ -13,6 +13,11 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   margin: 20px;
+
+  p {
+    margin: 5px 15px;
+    text-align: center;
+  }
 `;
 
 const Sprite = styled.img`
@@ -28,17 +33,55 @@ const Sprite = styled.img`
 //or, forget pagination, could just get the first 50 pokemon and their data, and work with that
 //don't lose data since we're not switching pages
 
-// const Abilities = (abilities) => {
-//   return(
-//   <p>Abilities: {abilities.map(ability => {return <span>{ability},</span> })}</p>
-//   )
-// }
+const Abilities = ({abilities}) => {
+  console.log("abilities.length:  " + abilities.length);
+  return abilities.length > 1 ? (
+    <p>
+      <strong>Abilities: </strong>
+      {abilities.map((ability, i) => {
+        console.log("ability, i: " + ability + " " + i);
+        if (i === abilities.length - 1) {
+          return <span>{ability}</span>;
+        } else {
+          return <span>{ability}, </span>;
+        }
+      })}
+    </p>
+  ) : abilities.length === 1 ? (
+    <p>
+      <strong>Ability: </strong> {abilities[0]}
+    </p>
+  ) : (
+    <p>
+      <strong>Abilities: </strong>none
+    </p>
+  );
+};
 
-// const Types = (types) => {
-//   return(
-//   <p>Types: {types.map(type => {return <span>{type},</span> })}</p>
-//   )
-// }
+const Types = ({types}) => {
+  console.log("types.length:  " + types.length);
+  return types.length > 1 ? (
+    <p>
+      <strong>Types: </strong>
+      {types.map((type, i) => {
+        console.log("type, i: " + type + " " + i);
+        if (i === types.length - 1) {
+          return <span>{type}</span>;
+        } else {
+          return <span>{type}, </span>;
+        }
+      })}
+    </p>
+  ) : types.length === 1 ? (
+    <p>
+      <strong>Type:</strong> {types[0]}
+    </p>
+  ) : (
+    <p>
+      <strong>Types:</strong> none
+    </p>
+  );
+};
 
 const Card = ({pokemon}) => {
   const [pokemonData, updatePokemonData] = useState({});
@@ -51,9 +94,6 @@ const Card = ({pokemon}) => {
   const [weight, updateWeight] = useState("");
   const [idNumber, updateIdNumber] = useState("");
   const [sprite, updateSprite] = useState("");
-
-  console.log("height: " + height);
-  console.log("weight:" + weight);
 
   const fetchPokemonData = (pokemon) => {
     console.log(`fetching data for ${pokemon}`);
@@ -103,8 +143,8 @@ const Card = ({pokemon}) => {
 
       updatePokemonData(parsedData);
       updateAbilities(
-        parsedData.abilities.map((ability) => {
-          return ability.name;
+        parsedData.abilities.map((x) => {
+          return x.ability.name;
         })
       );
       updateTypes(
@@ -116,6 +156,7 @@ const Card = ({pokemon}) => {
       updateWeight(parsedData.weight);
       updateIdNumber(parsedData.id);
       updateSprite(parsedData.sprites["front_default"]);
+      updateLoading(false);
     }
     //to cancel old request when we make a new request
     //so app doesn't load old data if an old request finishes before a new request
@@ -124,19 +165,21 @@ const Card = ({pokemon}) => {
   if (loading) {
     return <Container />;
   }
+  console.log(abilities);
 
   return isFlipped ? (
     // <img src={logo} alt="loading" className="loading-logo" />
 
     <Container onClick={() => updateIsFlipped(!isFlipped)}>
-      <p>Height: {height}</p>
-      <p>Weight: {weight}</p>
-      {types.map((type) => {
-        return <p>{type}</p>;
-      })}
-      {abilities.map((ability) => {
-        return <p>{ability}</p>;
-      })}
+      <p>
+        <strong>Height: </strong>
+        {height}
+      </p>
+      <p>
+        <strong>Weight:</strong> {weight}
+      </p>
+      <Types types={types} />
+      <Abilities abilities={abilities} />
     </Container>
   ) : (
     <Container onClick={() => updateIsFlipped(!isFlipped)}>

@@ -8,6 +8,7 @@ const PokemonContainer = styled.div`
   justify-content: center;
 `;
 const PokemonList = ({allPokemon, isLoading}) => {
+  console.log("all pokemon: " + JSON.stringify(allPokemon));
   return isLoading ? (
     // <img src={logo} alt="loading" className="loading-logo" />
     <p>Loading...</p>
