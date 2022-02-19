@@ -7,7 +7,7 @@ import "./App.css";
 function App() {
   const [pokemon, updatePokemon] = useState([]);
   const [basicPokemonUrl, updateBasicPokemonUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon"
+    "https://pokeapi.co/api/v2/pokemon?&limit=50"
   );
   const [loading, updateLoading] = useState(true);
 

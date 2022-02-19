@@ -14,28 +14,98 @@ const Container = styled.div`
   align-items: center;
   margin: 20px;
 
+  transition: all 0.3s ease-out;
+
   p {
     margin: 5px 15px;
     text-align: center;
+  }
+
+  @media (max-width: 1060px) {
+    width: 250px;
+    height: 250px;
+
+    h1 {
+      margin: 5px;
+    }
+  }
+
+  @media (max-width: 910px) {
+    width: 200px;
+    height: 200px;
+  }
+  @media (max-width: 760px) {
+    width: 230px;
+    height: 230px;
+  }
+  @media (max-width: 580px) {
+    width: 175px;
+    height: 175px;
+
+    margin: 10px;
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+    p {
+      font-size: 0.7rem;
+    }
+  }
+  @media (max-width: 425px) {
+    width: 120px;
+    height: 120px;
+
+    margin: 5px;
+
+    h1 {
+      font-size: 1.2rem;
+    }
+    p {
+      font-size: 0.7rem;
+    }
+  }
+  @media (max-width: 300px) {
+    width: 175px;
+    height: 175px;
+
+    margin: 10px;
+
+    h1 {
+      font-size: 1.2rem;
+    }
+    p {
+      font-size: 0.7rem;
+    }
   }
 `;
 
 const Sprite = styled.img`
   width: 150px;
+  @media (max-width: 1060px) {
+    width: 100px;
+  }
+  @media (max-width: 580px) {
+    width: 85px;
+  }
+  @media (max-width: 425px) {
+    width: 70px;
+  }
+  @media (max-width: 300px) {
+    width: 100px;
+  }
 `;
 
 //return abilities markup based on how many abilities the pokemon has
 const Abilities = ({abilities}) => {
-  console.log("abilities.length:  " + abilities.length);
   return abilities.length > 1 ? (
     <p>
       <strong>Abilities: </strong>
       {abilities.map((ability, i) => {
-        console.log("ability, i: " + ability + " " + i);
         if (i === abilities.length - 1) {
-          return <span>{ability}</span>;
+          return <span key={`ability-${i}`}>{ability}</span>;
         } else {
-          return <span>{ability}, </span>;
+          return <span key={`ability-${i}`}>{ability}, </span>;
         }
       })}
     </p>
@@ -52,16 +122,14 @@ const Abilities = ({abilities}) => {
 
 //return types markup based on how many types this pokemon has
 const Types = ({types}) => {
-  console.log("types.length:  " + types.length);
   return types.length > 1 ? (
     <p>
       <strong>Types: </strong>
       {types.map((type, i) => {
-        console.log("type, i: " + type + " " + i);
         if (i === types.length - 1) {
-          return <span>{type}</span>;
+          return <span key={`type-${i}`}>{type}</span>;
         } else {
-          return <span>{type}, </span>;
+          return <span key={`type-${i}`}>{type}, </span>;
         }
       })}
     </p>
@@ -99,8 +167,8 @@ const Card = ({pokemon}) => {
       updateLoading(false);
       updatePokemonData(res.data);
       updateAbilities(
-        res.data.abilities.map((ability) => {
-          return ability.name;
+        res.data.abilities.map((x) => {
+          return x.ability.name;
         })
       );
       updateTypes(
@@ -113,8 +181,20 @@ const Card = ({pokemon}) => {
       updateIdNumber(res.data.id);
       updateSprite(res.data.sprites["front_default"]);
 
-      //add to local storage
-      localStorage.setItem(`${pokemon}`, JSON.stringify(res.data));
+      //add only the data we need to local storage
+      //the more pokemon we're fetching, the more data we're putting into local storage
+      //at a certain amount of data the browser runs out of space
+      localStorage.setItem(
+        `${pokemon}`,
+        JSON.stringify({
+          abilities: res.data.abilities,
+          types: res.data.types,
+          height: res.data.height,
+          weight: res.data.weight,
+          id: res.data.id,
+          sprites: res.data.sprites,
+        })
+      );
     });
   };
 
@@ -158,9 +238,16 @@ const Card = ({pokemon}) => {
     return <Container />;
   }
 
+  /**
+   * TODO:  update styling, animation?? sizin of cards so less empty space, animate it?
+   * sorting/filtering
+   * deal with linting warnings
+   * get up to 50 pokemon instead of 20
+   */
+
   //return card that is "flipped" or unflipped, updated by onClick fxn
   return isFlipped ? (
-    <Container onClick={() => updateIsFlipped(!isFlipped)}>
+    <Container onClick={() => updateIsFlipped(!isFlipped)} key={pokemon}>
       <p>
         <strong>Height: </strong>
         {height}
@@ -172,7 +259,7 @@ const Card = ({pokemon}) => {
       <Abilities abilities={abilities} />
     </Container>
   ) : (
-    <Container onClick={() => updateIsFlipped(!isFlipped)}>
+    <Container onClick={() => updateIsFlipped(!isFlipped)} key={pokemon}>
       <Sprite src={sprite} alt="pokemon sprite" />
       <h1>{pokemon}</h1>
       <p>#{idNumber}</p>
