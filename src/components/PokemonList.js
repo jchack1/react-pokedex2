@@ -212,11 +212,11 @@ const PokemonList = ({allPokemon, isLoading}) => {
         <PokemonCard
           key={index}
           pokemon={pokemon}
-          filteredTypes={["normal", "flying"]}
-          filteredAbilities={["overgrow", "chlorophyll"]}
+          filteredTypes={[]}
+          filteredAbilities={["keen-eye"]}
           typesAndOr={"or"}
           abilitiesAndOr={"or"}
-          allAndOr={"or"}
+          // allAndOr={"or"}
         ></PokemonCard>
       ))}
     </PokemonContainer>

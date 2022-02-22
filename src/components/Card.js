@@ -152,11 +152,10 @@ const Card = ({
   typesAndOr,
   filteredAbilities,
   abilitiesAndOr,
-  allAndOr,
 }) => {
   // const [pokemonData, updatePokemonData] = useState({});
   // const [loading, updateLoading] = useState(true);
-  const [isFlipped, updateIsFlipped] = useState(true);
+  const [isFlipped, updateIsFlipped] = useState(false);
 
   const [abilities, updateAbilities] = useState(pokemon.abilities);
   const [types, updateTypes] = useState(pokemon.types);
@@ -172,6 +171,11 @@ const Card = ({
     //is our pokemon the same type that is selected?
     console.log("typesAndOr: " + typesAndOr);
     let show = true;
+    if (filteredTypes.length === 0) {
+      //if none selected
+      updateShowTypes(show);
+      return;
+    }
     if (typesAndOr === "and") {
       show = filteredTypes.every((t) => types.includes(t));
     }
@@ -186,6 +190,12 @@ const Card = ({
     //is our pokemon the same type that is selected?
     console.log("abilitiesAndOr: " + abilitiesAndOr);
     let show = true;
+    if (filteredAbilities.length === 0) {
+      //if none selected
+
+      updateShowAbilities(show);
+      return;
+    }
     if (abilitiesAndOr === "and") {
       show = filteredAbilities.every((a) => abilities.includes(a));
     }
@@ -196,21 +206,19 @@ const Card = ({
     updateShowAbilities(show);
   };
 
-  const showPokemonCard = (showTypes, showAbilities, totalAndOr) => {
+  const showPokemonCard = (showTypes, showAbilities) => {
     console.log(
-      "showtypes, showAbilities, andOr: " +
+      "showtypes, showAbilities " +
         JSON.stringify(showTypes) +
         " " +
-        JSON.stringify(showAbilities) +
-        " " +
-        totalAndOr
+        JSON.stringify(showAbilities)
     );
-    if (totalAndOr === "and" && showTypes && showAbilities) {
-      updateShowCard(true);
-    }
-    if (totalAndOr === "or" && (showTypes || showAbilities)) {
+    if (showTypes && showAbilities) {
+      console.log("showtypes + showabilities true");
       updateShowCard(true);
     } else {
+      console.log("else");
+
       updateShowCard(false);
     }
   };
@@ -218,11 +226,11 @@ const Card = ({
   useEffect(() => {
     showCardTypes(filteredTypes, typesAndOr);
     showCardAbilities(filteredAbilities, abilitiesAndOr);
-  }, [filteredTypes, typesAndOr, filteredAbilities, abilitiesAndOr, allAndOr]);
+  }, [filteredTypes, typesAndOr, filteredAbilities, abilitiesAndOr]);
   //   const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
   useEffect(() => {
-    showPokemonCard(showTypes, showAbilities, allAndOr);
+    showPokemonCard(showTypes, showAbilities);
   }, [showTypes, showAbilities]);
 
   console.log(
