@@ -167,9 +167,14 @@ const Card = ({
   // const [idNumber, updateIdNumber] = useState("");
   // const [sprite, updateSprite] = useState("");
 
+  console.log(
+    "from list filteredAbilities: " + JSON.stringify(filteredAbilities)
+  );
+  console.log("abilities andor: " + JSON.stringify(abilitiesAndOr));
+
   const showCardTypes = (filteredTypes, typesAndOr) => {
     //is our pokemon the same type that is selected?
-    console.log("typesAndOr: " + typesAndOr);
+    // console.log("typesAndOr: " + typesAndOr);
     let show = true;
     if (filteredTypes.length === 0) {
       //if none selected
@@ -188,7 +193,7 @@ const Card = ({
 
   const showCardAbilities = (filteredAbilities, abilitiesAndOr) => {
     //is our pokemon the same type that is selected?
-    console.log("abilitiesAndOr: " + abilitiesAndOr);
+    // console.log("abilitiesAndOr: " + abilitiesAndOr);
     let show = true;
     if (filteredAbilities.length === 0) {
       //if none selected
@@ -207,17 +212,17 @@ const Card = ({
   };
 
   const showPokemonCard = (showTypes, showAbilities) => {
-    console.log(
-      "showtypes, showAbilities " +
-        JSON.stringify(showTypes) +
-        " " +
-        JSON.stringify(showAbilities)
-    );
+    // console.log(
+    //   "showtypes, showAbilities " +
+    //     JSON.stringify(showTypes) +
+    //     " " +
+    //     JSON.stringify(showAbilities)
+    // );
     if (showTypes && showAbilities) {
-      console.log("showtypes + showabilities true");
+      // console.log("showtypes + showabilities true");
       updateShowCard(true);
     } else {
-      console.log("else");
+      // console.log("else");
 
       updateShowCard(false);
     }
@@ -233,12 +238,12 @@ const Card = ({
     showPokemonCard(showTypes, showAbilities);
   }, [showTypes, showAbilities]);
 
-  console.log(
-    "showCard : pokemon: " +
-      JSON.stringify(showCard) +
-      " " +
-      JSON.stringify(pokemon.pokemon)
-  );
+  // console.log(
+  //   "showCard : pokemon: " +
+  //     JSON.stringify(showCard) +
+  //     " " +
+  //     JSON.stringify(pokemon.pokemon)
+  // );
   //   //get data
   //   axios.get(url).then((res) => {
   //     //update state

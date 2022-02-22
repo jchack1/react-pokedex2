@@ -1,54 +1,33 @@
 import React, {useState, useEffect} from "react";
 import PokemonCard from "./Card";
+import Filter from "./Filter";
 import styled from "styled-components";
 import axios from "axios";
 
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 const PokemonContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 `;
 const PokemonList = ({allPokemon, isLoading}) => {
-  console.log("all pokemon: " + JSON.stringify(allPokemon));
-
-  // let pokemonData = [];
-  // let allAbilities = [];
-  // let allTypes = [];
-
   const [loadingPokemon, updateLoadingPokemon] = useState(true);
   const [allAbilitiesState, updateAllAbilitiesState] = useState([]);
   const [allTypesState, updateAllTypesState] = useState([]);
   const [pokemonDataState, updatePokemonDataState] = useState([]);
 
-  //what if i do a fetch here for each pokemon
-  //could add each one to an object i map through
-  //and cache each pokemon individually
-  //if pokemon in the cache, get each one from cache and build same object to map through
-  //for each pokemon, get their abililties and types and put into object here for filtering
-
-  //first check the first pokemon and see if it's in the cache, if one is they all should be
-  //then for pokemon of allPokemon do the fetch of get cached item
+  const [selectedTypes, updateSelectedTypes] = useState([]);
+  const [selectedAbilities, updateSelectedAbilities] = useState([]);
+  const [typesAndOr, updateTypesAndOr] = useState("or");
+  const [abilitiesAndOr, updateAbilitiesAndOr] = useState("or");
 
   const checkLocalStorageForPokemon = (pokemon) => {
     const data = localStorage.getItem(`${pokemon}`);
     return data;
   };
-
-  // const gatherAbilities = (abilities) => {
-  //   for (const ability of abilities) {
-  //     if (!allAbilities.includes(ability)) {
-  //       allAbilities.push(ability);
-  //     }
-  //   }
-  // };
-
-  // const gatherTypes = (types) => {
-  //   for (const type of types) {
-  //     if (!allTypes.includes(type)) {
-  //       allTypes.push(type);
-  //     }
-  //   }
-  // };
 
   const fetchPokemonData = (pokemonNames) => {
     let allData = [];
@@ -201,25 +180,45 @@ const PokemonList = ({allPokemon, isLoading}) => {
       </PokemonContainer>
     );
   }
-  console.log("pokemonDataState:" + JSON.stringify(pokemonDataState));
-  console.log("allabilitesState:" + JSON.stringify(allAbilitiesState));
-  console.log("alltypesState: " + JSON.stringify(allTypesState));
+  // console.log("pokemonDataState:" + JSON.stringify(pokemonDataState));
+  // console.log("allabilitesState:" + JSON.stringify(allAbilitiesState));
+  // console.log("alltypesState: " + JSON.stringify(allTypesState));
 
+  console.log(
+    "selectedAbilities: " +
+      JSON.stringify(selectedAbilities) +
+      " " +
+      typeof selectedAbilities
+  );
+  console.log("list abilities andor: " + JSON.stringify(abilitiesAndOr));
   //currently, we can have any of the below conditions - make sure this is what we want
   return (
-    <PokemonContainer>
-      {pokemonDataState.map((pokemon, index) => (
-        <PokemonCard
-          key={index}
-          pokemon={pokemon}
-          filteredTypes={[]}
-          filteredAbilities={["keen-eye"]}
-          typesAndOr={"or"}
-          abilitiesAndOr={"or"}
-          // allAndOr={"or"}
-        ></PokemonCard>
-      ))}
-    </PokemonContainer>
+    <PageContainer>
+      <Filter
+        typeOptions={allTypesState}
+        abilityOptions={allAbilitiesState}
+        selectedAbilities={selectedAbilities}
+        selectedTypes={selectedTypes}
+        updateSelectedTypes={updateSelectedTypes}
+        updateSelectedAbilities={updateSelectedAbilities}
+        updateTypesAndOr={updateTypesAndOr}
+        updateAbilitiesAndOr={updateAbilitiesAndOr}
+        typesAndOr={typesAndOr}
+        abilitiesAndOr={abilitiesAndOr}
+      />
+      <PokemonContainer>
+        {pokemonDataState.map((pokemon, index) => (
+          <PokemonCard
+            key={index}
+            pokemon={pokemon}
+            filteredAbilities={selectedAbilities}
+            filteredTypes={selectedTypes}
+            typesAndOr={typesAndOr}
+            abilitiesAndOr={abilitiesAndOr}
+          ></PokemonCard>
+        ))}
+      </PokemonContainer>
+    </PageContainer>
   );
 };
 
