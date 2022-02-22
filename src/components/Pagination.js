@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 
 //below we are using an if statement to check if we should render the prev and next buttons - if there is a page that we can actually navigate to
 
