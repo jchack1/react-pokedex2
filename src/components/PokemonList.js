@@ -7,6 +7,8 @@ import axios from "axios";
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding-top: 0;
 `;
 const PokemonContainer = styled.div`
   display: flex;
@@ -29,14 +31,15 @@ const PokemonList = ({allPokemon, isLoading}) => {
     return data;
   };
 
-  const fetchPokemonData = (pokemonNames) => {
+  const fetchPokemonData = async (pokemonNames) => {
     let allData = [];
     let allAbilities = [];
     let allTypes = [];
 
-    for (const pokemon of pokemonNames) {
+    for (const [i, pokemon] of pokemonNames.entries()) {
       //do a fetch
       console.log(`fetching data for ${pokemon}`);
+      console.log("i: " + i);
 
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
@@ -81,6 +84,28 @@ const PokemonList = ({allPokemon, isLoading}) => {
           sprite: res.data.sprites["front_default"],
         });
 
+        // console.log("alldata inside .then(): " + JSON.stringify(allData));
+        console.log("pokemon name and number: " + pokemon + " " + res.data.id);
+
+        //on the last one, update the state
+        if (i === pokemonNames.length - 1) {
+          console.log(
+            "allDataFetch if statement: " +
+              pokemon +
+              " " +
+              JSON.stringify(allData)
+          );
+
+          allData.sort((a, b) => {
+            return a.idNumber - b.idNumber;
+          });
+
+          updateAllAbilitiesState(allAbilities);
+          updateAllTypesState(allTypes);
+          updatePokemonDataState(allData);
+          updateLoadingPokemon(false);
+        }
+
         //save this pokemon's data to localStorage
 
         localStorage.setItem(
@@ -96,25 +121,23 @@ const PokemonList = ({allPokemon, isLoading}) => {
         );
       });
     }
-    console.log("allDataFetch: " + JSON.stringify(allData));
-
-    updateAllAbilitiesState(allAbilities);
-    updateAllTypesState(allTypes);
-    updatePokemonDataState(allData);
-    updateLoadingPokemon(false);
   };
 
   useEffect(() => {
     //first check localstorage for a pokemon - tells us if we have them already
-    const pokemonIsCached = checkLocalStorageForPokemon(allPokemon[0]);
+    let pokemonIsCached = checkLocalStorageForPokemon(allPokemon[0]);
 
     console.log("pokemoniscached: " + JSON.stringify(pokemonIsCached));
 
     if (pokemonIsCached === null) {
       fetchPokemonData(allPokemon);
     }
+    console.log("outside fetch");
+    //check again
+    let checkCache = checkLocalStorageForPokemon(allPokemon[0]);
+    console.log("check cache: " + JSON.stringify(checkCache));
 
-    if (pokemonIsCached !== null) {
+    if (checkCache !== null) {
       console.log("pokemon are cached");
 
       let allData = [];
@@ -197,8 +220,6 @@ const PokemonList = ({allPokemon, isLoading}) => {
       <Filter
         typeOptions={allTypesState}
         abilityOptions={allAbilitiesState}
-        selectedAbilities={selectedAbilities}
-        selectedTypes={selectedTypes}
         updateSelectedTypes={updateSelectedTypes}
         updateSelectedAbilities={updateSelectedAbilities}
         updateTypesAndOr={updateTypesAndOr}

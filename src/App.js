@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import PokemonList from "./components/PokemonList";
 import axios from "axios";
 import "./App.css";
-
+import Image from "./images/AshPikachu.png";
 function App() {
   const [pokemon, updatePokemon] = useState([]);
   const [basicPokemonUrl, updateBasicPokemonUrl] = useState(
@@ -44,7 +44,33 @@ function App() {
 
   return (
     <>
-      <h1 className="MainTitle">Pokemon!</h1>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "50px",
+        }}
+      >
+        <img
+          src={Image}
+          alt="ash and pikachu from snipstock"
+          style={{width: "200px"}}
+        />
+        <h1
+          className="MainTitle"
+          style={{
+            color: "white",
+            textAlign: "center",
+            fontSize: "2.3rem",
+            margin: "0 20px 10px 0",
+          }}
+        >
+          Pokedex
+        </h1>
+      </div>
+
       <PokemonList allPokemon={pokemon} isLoading={loading} />
     </>
   );

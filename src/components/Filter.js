@@ -1,35 +1,32 @@
 import React, {useState, useEffect} from "react";
 import Select from "react-select";
 import styled from "styled-components";
-
-const AndOrButton = styled.button`
-  width: 100px;
-  height: 30px;
-  padding: 8px 10px;
-
-  background: ${(props) => (props.on ? "yellow" : "black")};
-  color: ${(props) => (props.on ? "black" : "yellow")};
-  border: ${(props) => (props.on ? "2px solid black" : "2px solid yellow")};
-
-  font-family: Arial, sans-serif;
-
-  transition: all 0.3s ease-out;
-`;
+import Toggle from "./Toggle";
 
 const FilterContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  margin: 30px;
+  margin: 10px 30px 50px 30px;
 `;
 const SelectContainer = styled.div`
   display: flex;
+  width: 80vw;
+  max-width: 600px;
+  flex-direction: column;
+`;
+
+const LabelAndToggleContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  p {
+    color: white;
+    font-weight: 600;
+    margin-right: 10px;
+  }
 `;
 
 const Filter = ({
   typeOptions,
   abilityOptions,
-  selectedAbilities,
-  selectedTypes,
   updateSelectedTypes,
   updateSelectedAbilities,
   updateTypesAndOr,
@@ -74,38 +71,52 @@ const Filter = ({
     updateSelectedTypes(array);
   };
 
-  console.log("abilities andor filter: " + JSON.stringify(abilitiesAndOr));
   return (
     <FilterContainer>
       <SelectContainer>
+        <LabelAndToggleContainer>
+          <p>Filter types</p>
+          <Toggle
+            active={typesAndOr}
+            onClick={() => {
+              if (typesAndOr === "and") {
+                updateTypesAndOr("or");
+              }
+              if (typesAndOr === "or") {
+                updateTypesAndOr("and");
+              }
+            }}
+          />
+        </LabelAndToggleContainer>
+
         <Select
           options={allTypeOptions}
           onChange={(x) => formatSelectedTypes(x)}
           isMulti
+          placeholder="Types..."
         />
-        {typesAndOr === "or" ? (
-          <AndOrButton onClick={() => updateTypesAndOr("and")}>OR</AndOrButton>
-        ) : (
-          <AndOrButton onClick={() => updateTypesAndOr("or")}>AND</AndOrButton>
-        )}
-      </SelectContainer>
-      <SelectContainer>
+        <LabelAndToggleContainer style={{marginTop: "20px"}}>
+          <p>Filter abilities</p>
+          <Toggle
+            active={abilitiesAndOr}
+            onClick={() => {
+              if (abilitiesAndOr === "and") {
+                updateAbilitiesAndOr("or");
+              }
+              if (abilitiesAndOr === "or") {
+                updateAbilitiesAndOr("and");
+              }
+            }}
+          />
+        </LabelAndToggleContainer>
         <Select
           options={allAbilityOptions}
           onChange={(x) => {
             formatSelectedAbilities(x);
           }}
           isMulti
+          placeholder="Abilities..."
         />
-        {abilitiesAndOr === "or" ? (
-          <AndOrButton onClick={() => updateAbilitiesAndOr("and")}>
-            OR
-          </AndOrButton>
-        ) : (
-          <AndOrButton onClick={() => updateAbilitiesAndOr("or")}>
-            AND
-          </AndOrButton>
-        )}
       </SelectContainer>
     </FilterContainer>
   );

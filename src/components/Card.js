@@ -18,6 +18,10 @@ const Container = styled.div`
   display: ${(props) => (props.show ? "flex" : "none")};
 
   transition: all 0.3s ease-out;
+
+  &:hover {
+    box-shadow: 0px 8px 30px 8px rgba(0, 0, 0, 0.95);
+  }
   p {
     margin: 5px 15px;
     text-align: center;
@@ -167,10 +171,10 @@ const Card = ({
   // const [idNumber, updateIdNumber] = useState("");
   // const [sprite, updateSprite] = useState("");
 
-  console.log(
-    "from list filteredAbilities: " + JSON.stringify(filteredAbilities)
-  );
-  console.log("abilities andor: " + JSON.stringify(abilitiesAndOr));
+  // console.log(
+  //   "from list filteredAbilities: " + JSON.stringify(filteredAbilities)
+  // );
+  // console.log("abilities andor: " + JSON.stringify(abilitiesAndOr));
 
   const showCardTypes = (filteredTypes, typesAndOr) => {
     //is our pokemon the same type that is selected?
