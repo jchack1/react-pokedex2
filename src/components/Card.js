@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import styled from "styled-components";
-import axios from "axios";
 import "../App.css";
 
 const Container = styled.div`
@@ -20,7 +19,7 @@ const Container = styled.div`
   transition: all 0.3s ease-out;
 
   &:hover {
-    box-shadow: 0px 8px 30px 8px rgba(0, 0, 0, 0.95);
+    box-shadow: 0px 7px 32px 7px rgba(0, 0, 0, 0.9);
   }
   p {
     margin: 5px 15px;
@@ -59,19 +58,19 @@ const Container = styled.div`
     }
   }
   @media (max-width: 425px) {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
 
     margin: 5px;
 
     h1 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
     p {
-      font-size: 0.7rem;
+      font-size: 0.6rem;
     }
   }
-  @media (max-width: 300px) {
+  @media (max-width: 320px) {
     width: 175px;
     height: 175px;
 
@@ -150,6 +149,7 @@ const Types = ({types}) => {
   );
 };
 
+//get data from filter to know if we should show the card
 const Card = ({
   pokemon,
   filteredTypes,
@@ -157,8 +157,6 @@ const Card = ({
   filteredAbilities,
   abilitiesAndOr,
 }) => {
-  // const [pokemonData, updatePokemonData] = useState({});
-  // const [loading, updateLoading] = useState(true);
   const [isFlipped, updateIsFlipped] = useState(false);
 
   const [abilities, updateAbilities] = useState(pokemon.abilities);
@@ -166,20 +164,11 @@ const Card = ({
   const [showTypes, updateShowTypes] = useState(true);
   const [showAbilities, updateShowAbilities] = useState(true);
   const [showCard, updateShowCard] = useState(true);
-  // const [height, updateHeight] = useState("");
-  // const [weight, updateWeight] = useState("");
-  // const [idNumber, updateIdNumber] = useState("");
-  // const [sprite, updateSprite] = useState("");
-
-  // console.log(
-  //   "from list filteredAbilities: " + JSON.stringify(filteredAbilities)
-  // );
-  // console.log("abilities andor: " + JSON.stringify(abilitiesAndOr));
 
   const showCardTypes = (filteredTypes, typesAndOr) => {
     //is our pokemon the same type that is selected?
-    // console.log("typesAndOr: " + typesAndOr);
     let show = true;
+
     if (filteredTypes.length === 0) {
       //if none selected
       updateShowTypes(show);
@@ -196,12 +185,11 @@ const Card = ({
   };
 
   const showCardAbilities = (filteredAbilities, abilitiesAndOr) => {
-    //is our pokemon the same type that is selected?
-    // console.log("abilitiesAndOr: " + abilitiesAndOr);
+    //is our pokemon the same ability that is selected?
     let show = true;
+
     if (filteredAbilities.length === 0) {
       //if none selected
-
       updateShowAbilities(show);
       return;
     }
@@ -215,19 +203,11 @@ const Card = ({
     updateShowAbilities(show);
   };
 
+  //check both types and abilities, if both are true then show the card
   const showPokemonCard = (showTypes, showAbilities) => {
-    // console.log(
-    //   "showtypes, showAbilities " +
-    //     JSON.stringify(showTypes) +
-    //     " " +
-    //     JSON.stringify(showAbilities)
-    // );
     if (showTypes && showAbilities) {
-      // console.log("showtypes + showabilities true");
       updateShowCard(true);
     } else {
-      // console.log("else");
-
       updateShowCard(false);
     }
   };
@@ -236,122 +216,11 @@ const Card = ({
     showCardTypes(filteredTypes, typesAndOr);
     showCardAbilities(filteredAbilities, abilitiesAndOr);
   }, [filteredTypes, typesAndOr, filteredAbilities, abilitiesAndOr]);
-  //   const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
   useEffect(() => {
     showPokemonCard(showTypes, showAbilities);
   }, [showTypes, showAbilities]);
 
-  // console.log(
-  //   "showCard : pokemon: " +
-  //     JSON.stringify(showCard) +
-  //     " " +
-  //     JSON.stringify(pokemon.pokemon)
-  // );
-  //   //get data
-  //   axios.get(url).then((res) => {
-  //     //update state
-  //     updateLoading(false);
-  //     // updatePokemonData(res.data);
-  //     updateAbilities(
-  //       res.data.abilities.map((x) => {
-  //         return x.ability.name;
-  //       })
-  //     );
-  //     updateTypes(
-  //       res.data.types.map((type) => {
-  //         return type.type.name;
-  //       })
-  //     );
-  //     updateHeight(res.data.height);
-  //     updateWeight(res.data.weight);
-  //     updateIdNumber(res.data.id);
-  //     updateSprite(res.data.sprites["front_default"]);
-
-  //     //add only the data we need to local storage
-  //     //the more pokemon we're fetching, the more data we're putting into local storage
-  //     //at a certain amount of data the browser runs out of space
-  //     localStorage.setItem(
-  //       `${pokemon}`,
-  //       JSON.stringify({
-  //         abilities: res.data.abilities,
-  //         types: res.data.types,
-  //         height: res.data.height,
-  //         weight: res.data.weight,
-  //         id: res.data.id,
-  //         sprites: res.data.sprites,
-  //       })
-  //     );
-  //   });
-  // };
-
-  // const checkLocalStorageForPokemon = (pokemon) => {
-  //   const data = localStorage.getItem(`${pokemon}`);
-  //   return data;
-  // };
-
-  // useEffect(() => {
-  //   //first check localstorage for the pokemon data
-  //   const data = checkLocalStorageForPokemon(pokemon);
-
-  //   if (data === null) {
-  //     fetchPokemonData(pokemon);
-  //   }
-  //   if (data !== null) {
-  //     //parse data
-  //     const parsedData = JSON.parse(data);
-
-  //     //update state
-  //     // updatePokemonData(parsedData);
-  //     updateAbilities(
-  //       parsedData.abilities.map((x) => {
-  //         return x.ability.name;
-  //       })
-  //     );
-  //     updateTypes(
-  //       parsedData.types.map((type) => {
-  //         return type.type.name;
-  //       })
-  //     );
-  //     updateHeight(parsedData.height);
-  //     updateWeight(parsedData.weight);
-  //     updateIdNumber(parsedData.id);
-  //     updateSprite(parsedData.sprites["front_default"]);
-  //     updateLoading(false);
-  //   }
-  // }, [pokemon]);
-
-  // if (loading) {
-  //   return <Container />;
-  // }
-
-  /**
-   * TODO:  update styling, animation?? sizin of cards so less empty space, animate it?
-   * sorting/filtering
-   * deal with linting warnings
-   * get up to 50 pokemon instead of 20
-   */
-
-  //return card that is "flipped" or unflipped, updated by onClick fxn
-  // return isFlipped ? (
-  //   <Container onClick={() => updateIsFlipped(!isFlipped)} key={pokemon}>
-  //     <p>
-  //       <strong>Height: </strong>
-  //       {height}
-  //     </p>
-  //     <p>
-  //       <strong>Weight:</strong> {weight}
-  //     </p>
-  //     <Types types={types} />
-  //     <Abilities abilities={abilities} />
-  //   </Container>
-  // ) : (
-  //   <Container onClick={() => updateIsFlipped(!isFlipped)} key={pokemon}>
-  //     <Sprite src={sprite} alt="pokemon sprite" />
-  //     <h1>{pokemon}</h1>
-  //     <p>#{idNumber}</p>
-  //   </Container>
-  // );
   return isFlipped ? (
     <Container
       onClick={() => updateIsFlipped(!isFlipped)}

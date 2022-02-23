@@ -3,6 +3,7 @@ import PokemonCard from "./Card";
 import Filter from "./Filter";
 import styled from "styled-components";
 import axios from "axios";
+import Loading from "./Loading";
 
 const PageContainer = styled.div`
   display: flex;
@@ -38,8 +39,9 @@ const PokemonList = ({allPokemon, isLoading}) => {
 
     for (const [i, pokemon] of pokemonNames.entries()) {
       //do a fetch
-      console.log(`fetching data for ${pokemon}`);
-      console.log("i: " + i);
+
+      // console.log(`fetching data for ${pokemon}`);
+      // console.log("i: " + i);
 
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
@@ -53,9 +55,6 @@ const PokemonList = ({allPokemon, isLoading}) => {
         const pokemonTypes = res.data.types.map((type) => {
           return type.type.name;
         });
-
-        // gatherAbilities(pokemonAbilities);
-        // gatherTypes(pokemonTypes);
 
         for (const ability of pokemonAbilities) {
           if (!allAbilities.includes(ability)) {
@@ -193,13 +192,10 @@ const PokemonList = ({allPokemon, isLoading}) => {
     }
   }, [allPokemon]);
 
-  // const uniqueAbilities = [...new Set(allAbilities)];
-  // console.log("unique abilities" + JSON.stringify(uniqueAbilities));
-
   if (loadingPokemon) {
     return (
       <PokemonContainer>
-        <p>Loading...</p>
+        <Loading />
       </PokemonContainer>
     );
   }
@@ -207,13 +203,6 @@ const PokemonList = ({allPokemon, isLoading}) => {
   // console.log("allabilitesState:" + JSON.stringify(allAbilitiesState));
   // console.log("alltypesState: " + JSON.stringify(allTypesState));
 
-  console.log(
-    "selectedAbilities: " +
-      JSON.stringify(selectedAbilities) +
-      " " +
-      typeof selectedAbilities
-  );
-  console.log("list abilities andor: " + JSON.stringify(abilitiesAndOr));
   //currently, we can have any of the below conditions - make sure this is what we want
   return (
     <PageContainer>

@@ -3,12 +3,11 @@ import PokemonList from "./components/PokemonList";
 import axios from "axios";
 import "./App.css";
 import Image from "./images/AshPikachu.png";
+import Loading from "./components/Loading";
 function App() {
   const [pokemon, updatePokemon] = useState([]);
-  const [basicPokemonUrl, updateBasicPokemonUrl] = useState(
-    "https://pokeapi.co/api/v2/pokemon?&limit=50"
-  );
   const [loading, updateLoading] = useState(true);
+  const basicPokemonUrl = "https://pokeapi.co/api/v2/pokemon?&limit=50";
 
   const fetchAllPokemon = () => {
     axios.get(basicPokemonUrl).then((res) => {
@@ -40,7 +39,45 @@ function App() {
     }
   }, [basicPokemonUrl]);
 
-  if (loading) return "Loading...";
+  if (loading)
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "50px",
+          }}
+        >
+          <img
+            src={Image}
+            alt="ash and pikachu from snipstock"
+            style={{width: "200px"}}
+          />
+          <h1
+            className="MainTitle"
+            style={{
+              color: "white",
+              textAlign: "center",
+              fontSize: "2.3rem",
+              margin: "0 20px 10px 0",
+            }}
+          >
+            Pokedex
+          </h1>
+        </div>
+        <Loading />
+      </div>
+    );
 
   return (
     <>

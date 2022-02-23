@@ -38,7 +38,7 @@ const Filter = ({
   const [allAbilityOptions, updateAllAbilityOptions] = useState([]);
 
   useEffect(() => {
-    //create type options for select
+    //create type options for select - needs value and label format
     const types = typeOptions.map((type) => {
       return {
         value: type,
@@ -47,7 +47,7 @@ const Filter = ({
     });
     updateAllTypeOptions(types);
 
-    //create ability options
+    //create ability options for select - needs value and label format
     const abilities = abilityOptions.map((ability) => {
       return {
         value: ability,
