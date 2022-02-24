@@ -21,6 +21,7 @@ const PokemonList = ({allPokemon, isLoading}) => {
   const [allAbilitiesState, updateAllAbilitiesState] = useState([]);
   const [allTypesState, updateAllTypesState] = useState([]);
   const [pokemonDataState, updatePokemonDataState] = useState([]);
+  const [pokemonCached, updatePokemonCached] = useState(false);
 
   const [selectedTypes, updateSelectedTypes] = useState([]);
   const [selectedAbilities, updateSelectedAbilities] = useState([]);
@@ -33,77 +34,15 @@ const PokemonList = ({allPokemon, isLoading}) => {
   };
 
   const fetchPokemonData = async (pokemonNames) => {
-    let allData = [];
-    let allAbilities = [];
-    let allTypes = [];
-
     for (const [i, pokemon] of pokemonNames.entries()) {
       //do a fetch
-
-      // console.log(`fetching data for ${pokemon}`);
-      // console.log("i: " + i);
 
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
       axios.get(url).then((res) => {
         //get abilities and types, push them to abilities and types arrays
 
-        const pokemonAbilities = res.data.abilities.map((x) => {
-          return x.ability.name;
-        });
-
-        const pokemonTypes = res.data.types.map((type) => {
-          return type.type.name;
-        });
-
-        for (const ability of pokemonAbilities) {
-          if (!allAbilities.includes(ability)) {
-            allAbilities.push(ability);
-          }
-        }
-        for (const type of pokemonTypes) {
-          if (!allTypes.includes(type)) {
-            allTypes.push(type);
-          }
-        }
-
-        // console.log(
-        //   "pokemonabilities fetch: " + JSON.stringify(pokemonAbilities)
-        // );
-        // console.log("pokemintypes fetch: " + JSON.stringify(pokemonTypes));
-        //push object of only the data we need to pokemonData array
-
-        allData.push({
-          pokemon: pokemon,
-          abilities: pokemonAbilities,
-          types: pokemonTypes,
-          height: res.data.height,
-          weight: res.data.weight,
-          idNumber: res.data.id,
-          sprite: res.data.sprites["front_default"],
-        });
-
-        // console.log("alldata inside .then(): " + JSON.stringify(allData));
-        console.log("pokemon name and number: " + pokemon + " " + res.data.id);
-
-        //on the last one, update the state
-        if (i === pokemonNames.length - 1) {
-          console.log(
-            "allDataFetch if statement: " +
-              pokemon +
-              " " +
-              JSON.stringify(allData)
-          );
-
-          allData.sort((a, b) => {
-            return a.idNumber - b.idNumber;
-          });
-
-          updateAllAbilitiesState(allAbilities);
-          updateAllTypesState(allTypes);
-          updatePokemonDataState(allData);
-          updateLoadingPokemon(false);
-        }
+        console.log("inside axios.get, pokemon and i: " + pokemon + " " + i);
 
         //save this pokemon's data to localStorage
 
@@ -118,25 +57,40 @@ const PokemonList = ({allPokemon, isLoading}) => {
             sprites: res.data.sprites,
           })
         );
+
+        if (i === pokemonNames.length - 1) {
+          console.log(
+            "pokemonNames.length - 1, i: " +
+              (pokemonNames.length - 1).toString()
+          );
+
+          updatePokemonCached(true);
+        }
       });
     }
   };
 
   useEffect(() => {
-    //first check localstorage for a pokemon - tells us if we have them already
     let pokemonIsCached = checkLocalStorageForPokemon(allPokemon[0]);
-
-    console.log("pokemoniscached: " + JSON.stringify(pokemonIsCached));
-
+    console.log(
+      "pokemoniscached useEffect: " + JSON.stringify(pokemonIsCached)
+    );
     if (pokemonIsCached === null) {
       fetchPokemonData(allPokemon);
     }
-    console.log("outside fetch");
-    //check again
-    let checkCache = checkLocalStorageForPokemon(allPokemon[0]);
-    console.log("check cache: " + JSON.stringify(checkCache));
 
-    if (checkCache !== null) {
+    if (pokemonIsCached !== null) {
+      console.log("first useeffect cached");
+      updatePokemonCached(true);
+    }
+  }, [allPokemon]);
+
+  useEffect(() => {
+    //first check localstorage for a pokemon - tells us if we have them already
+    console.log("inside cached data useeffect");
+    let pokemonIsCached = checkLocalStorageForPokemon(allPokemon[0]);
+
+    if (pokemonIsCached !== null) {
       console.log("pokemon are cached");
 
       let allData = [];
@@ -183,14 +137,18 @@ const PokemonList = ({allPokemon, isLoading}) => {
           sprite: currentPokemonData.sprites["front_default"],
         });
       }
-      console.log("allDataCache: " + JSON.stringify(allData));
+      // console.log("allDataCache: " + JSON.stringify(allData));
 
       updateAllAbilitiesState(allAbilities);
       updateAllTypesState(allTypes);
       updatePokemonDataState(allData);
-      updateLoadingPokemon(false);
+      // updateLoadingPokemon(false);
     }
-  }, [allPokemon]);
+  }, [pokemonCached]);
+
+  useEffect(() => {
+    updateLoadingPokemon(false);
+  }, [pokemonDataState]);
 
   if (loadingPokemon) {
     return (

@@ -11,10 +11,12 @@ function App() {
 
   const fetchAllPokemon = () => {
     axios.get(basicPokemonUrl).then((res) => {
-      //we have our data, so no longer loading, then update state and local storage
-      updateLoading(false);
+      //update state and local storage
       updatePokemon(res.data.results.map((p) => p.name));
       localStorage.setItem("pokemon", JSON.stringify(res.data.results));
+
+      //no longer loading
+      updateLoading(false);
     });
   };
 
@@ -78,6 +80,8 @@ function App() {
         <Loading />
       </div>
     );
+
+  console.log("pokemon app.js: " + JSON.stringify(pokemon));
 
   return (
     <>
