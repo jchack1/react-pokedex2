@@ -159,8 +159,8 @@ const Card = ({
 }) => {
   const [isFlipped, updateIsFlipped] = useState(false);
 
-  const [abilities, updateAbilities] = useState(pokemon.abilities);
-  const [types, updateTypes] = useState(pokemon.types);
+  const abilities = pokemon.abilities;
+  const types = pokemon.types;
   const [showTypes, updateShowTypes] = useState(true);
   const [showAbilities, updateShowAbilities] = useState(true);
   const [showCard, updateShowCard] = useState(true);
