@@ -112,7 +112,11 @@ function App() {
         </h1>
       </div>
 
-      <PokemonList allPokemon={pokemon} isLoading={loading} />
+      <PokemonList
+        allPokemon={pokemon}
+        isLoading={loading}
+        updateIsLoading={updateLoading}
+      />
     </>
   );
 }

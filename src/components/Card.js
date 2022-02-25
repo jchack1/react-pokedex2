@@ -149,7 +149,7 @@ const Types = ({types}) => {
   );
 };
 
-//get data from filter to know if we should show the card
+//incoming data from filter lets us know if we should show the card
 const Card = ({
   pokemon,
   filteredTypes,
