@@ -13,20 +13,20 @@ function App() {
     axios.get(basicPokemonUrl).then((res) => {
       //update state and local storage
       updatePokemon(res.data.results.map((p) => p.name));
-      localStorage.setItem("pokemon", JSON.stringify(res.data.results));
+      sessionStorage.setItem("pokemon", JSON.stringify(res.data.results));
 
       //no longer loading
       updateLoading(false);
     });
   };
 
-  const checkLocalStorageForAllPokemon = () => {
-    const data = localStorage.getItem("pokemon");
+  const checkSessionStorageForAllPokemon = () => {
+    const data = sessionStorage.getItem("pokemon");
     return data;
   };
 
   useEffect(() => {
-    const data = checkLocalStorageForAllPokemon();
+    const data = checkSessionStorageForAllPokemon();
 
     if (data === null) {
       fetchAllPokemon();
@@ -81,7 +81,7 @@ function App() {
       </div>
     );
 
-  console.log("pokemon app.js: " + JSON.stringify(pokemon));
+  // console.log("pokemon app.js: " + JSON.stringify(pokemon));
 
   return (
     <>

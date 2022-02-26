@@ -28,7 +28,7 @@ const PokemonList = ({allPokemon}) => {
   const [typesAndOr, updateTypesAndOr] = useState("or");
   const [abilitiesAndOr, updateAbilitiesAndOr] = useState("or");
 
-  const checksessionStorageForPokemon = (pokemon) => {
+  const checkSessionStorageForPokemon = (pokemon) => {
     const data = sessionStorage.getItem(`${pokemon}`);
     return data;
   };
@@ -117,7 +117,7 @@ const PokemonList = ({allPokemon}) => {
   useEffect(() => {
     //first check sessionStorage for a pokemon - tells us if we have them already
 
-    let pokemonIsCached = checksessionStorageForPokemon(allPokemon[0]);
+    let pokemonIsCached = checkSessionStorageForPokemon(allPokemon[0]);
 
     if (pokemonIsCached === null) {
       fetchPokemonData(allPokemon);
