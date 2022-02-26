@@ -28,8 +28,8 @@ const PokemonList = ({allPokemon}) => {
   const [typesAndOr, updateTypesAndOr] = useState("or");
   const [abilitiesAndOr, updateAbilitiesAndOr] = useState("or");
 
-  const checkLocalStorageForPokemon = (pokemon) => {
-    const data = localStorage.getItem(`${pokemon}`);
+  const checksessionStorageForPokemon = (pokemon) => {
+    const data = sessionStorage.getItem(`${pokemon}`);
     return data;
   };
 
@@ -39,8 +39,11 @@ const PokemonList = ({allPokemon}) => {
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
 
       await axios.get(url).then((res) => {
-        //save this pokemon's data to localStorage
-        localStorage.setItem(
+        //save this pokemon's data to sessionStorage
+
+        // console.log(`fetched ${pokemon}`);
+
+        sessionStorage.setItem(
           `${pokemon}`,
           JSON.stringify({
             abilities: res.data.abilities,
@@ -64,7 +67,14 @@ const PokemonList = ({allPokemon}) => {
     let allTypes = [];
 
     for (const pokemon of allPokemon) {
-      const currentPokemonData = JSON.parse(localStorage.getItem(`${pokemon}`));
+      const currentPokemonData = JSON.parse(
+        sessionStorage.getItem(`${pokemon}`)
+      );
+
+      if (currentPokemonData === null) {
+        console.log(`cache for ${pokemon} null, continuing`);
+        continue;
+      }
 
       const pokemonAbilities = currentPokemonData.abilities.map((x) => {
         return x.ability.name;
@@ -105,9 +115,9 @@ const PokemonList = ({allPokemon}) => {
   };
 
   useEffect(() => {
-    //first check localstorage for a pokemon - tells us if we have them already
+    //first check sessionStorage for a pokemon - tells us if we have them already
 
-    let pokemonIsCached = checkLocalStorageForPokemon(allPokemon[0]);
+    let pokemonIsCached = checksessionStorageForPokemon(allPokemon[0]);
 
     if (pokemonIsCached === null) {
       fetchPokemonData(allPokemon);
