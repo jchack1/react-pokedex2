@@ -7,7 +7,7 @@ import Loading from "./components/Loading";
 function App() {
   const [pokemon, updatePokemon] = useState([]);
   const [loading, updateLoading] = useState(true);
-  const basicPokemonUrl = "https://pokeapi.co/api/v2/pokemon?&limit=50";
+  const basicPokemonUrl = "https://pokeapi.co/api/v2/pokemon?&limit=40";
 
   const fetchAllPokemon = () => {
     axios.get(basicPokemonUrl).then((res) => {
