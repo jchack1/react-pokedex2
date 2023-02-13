@@ -34,17 +34,18 @@ const PokemonList = ({allPokemon}) => {
   };
 
   const fetchPokemonData = async (pokemonNames) => {
-    for (const pokemon of pokemonNames) {
-      //do a fetch
+    //chatgpt helped me with this code
+
+    const requests = pokemonNames.map((pokemon) => {
       const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}/`;
+      return axios.get(url);
+    });
 
-      await axios.get(url).then((res) => {
-        //save this pokemon's data to sessionStorage
-
-        // console.log(`fetched ${pokemon}`);
-
+    try {
+      const responses = await Promise.all(requests);
+      responses.forEach((res) => {
         sessionStorage.setItem(
-          `${pokemon}`,
+          `${res.data.name}`,
           JSON.stringify({
             abilities: res.data.abilities,
             types: res.data.types,
@@ -55,9 +56,10 @@ const PokemonList = ({allPokemon}) => {
           })
         );
       });
+    } catch (error) {
+      console.error(error);
     }
-    await getCachedData(allPokemon);
-
+    getCachedData(allPokemon);
     return true;
   };
 
